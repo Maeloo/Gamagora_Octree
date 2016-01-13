@@ -1,14 +1,7 @@
 #pragma once
-#include "struct.h"
-using namespace std;
+#include "Global.h"
 
-// TODO
-struct Voxel
-{
-	point3 origin;
-	float edge_size;
-	int potentiel;
-};
+using namespace std;
 
 class Octree
 {

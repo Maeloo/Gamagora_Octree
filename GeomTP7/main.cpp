@@ -3,7 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <GL/freeglut.h>
-#include "struct.h"
+#include "Octree.h"
 
 /* au cas ou M_PI ne soit defini */
 #ifndef M_PI
@@ -16,18 +16,6 @@ using namespace std;
 #define HEIGHT 768
 
 #define KEY_ESC 27
-
-struct Sphere {
-	point3 origin;
-	float radius;
-};
-
-struct Voxel {
-	point3 origin;
-	GLfloat edge_size;
-	GLfloat* vertices;
-	int potentiel;
-};
 
 GLfloat qaWhite[] = { 1.0, 1.0, 1.0, 1.0 }; // White Color
 

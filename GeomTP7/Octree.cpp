@@ -1,4 +1,4 @@
-#include "Octree.h"]
+#include "Octree.h"
 
 Octree::Octree()
 {

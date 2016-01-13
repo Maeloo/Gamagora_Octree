@@ -110,12 +110,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\ModelisationGeometrique_TP8_ModelesVol\ModelisationGeometrique_TP8_ModelesVol\Octree.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Octree.cpp" />
     <ClCompile Include="struct.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\ModelisationGeometrique_TP8_ModelesVol\ModelisationGeometrique_TP8_ModelesVol\Octree.h" />
+    <ClInclude Include="Global.h" />
+    <ClInclude Include="Octree.h" />
     <ClInclude Include="struct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
