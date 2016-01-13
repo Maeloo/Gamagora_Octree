@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <GL/freeglut.h>
+#include <GL/glut.h>
 #include "Octree.h"
 
 /* au cas ou M_PI ne soit defini */
@@ -333,10 +333,13 @@ void updateData() {
 	Sphere s2 = { origin2, 15.f };
 
 	//DATA = getBoxData(BOX, &DATA_SIZE);
-	DATA = getSphereData(BOX, s1, &DATA_SIZE);
+	//DATA = getSphereData(BOX, s1, &DATA_SIZE);
 	//DATA = getDiffSphereData(BOX, s1, s2, &DATA_SIZE);
 	//DATA = getIntersectionSphereData(BOX, s1, s2, &DATA_SIZE);
 	//DATA = getUnionSphereData(BOX, s1, s2, &DATA_SIZE);
+
+	Octree octree = Octree(point3(.0f, .0f, .0f), 50.0f);
+	octree.createNodes(s1, DATA);
 }
 
 /* Dessin */
@@ -471,7 +474,7 @@ int main ( int argc, char **argv ) {
 	glutInitWindowSize ( 400, 400 );
 	glutInit ( &argc, argv );
 	glutInitDisplayMode ( GLUT_DOUBLE | GLUT_RGB | GLUT_RGB );
-	glutCreateWindow ( "Volumes" );
+	glutCreateWindow ( "Voxel" );
 	init ( );
 	glutReshapeFunc ( reshape );
 	glutKeyboardFunc ( &window_key_down );

@@ -18,6 +18,7 @@ public:
 	Octree();
 	Octree(const point3& origin, const int size);
 	~Octree();
-	void Init(const Sphere& s);
+	void createNodes(const Sphere& s, Voxel* data);
+	bool isIn(const Sphere& s);
 };
 
