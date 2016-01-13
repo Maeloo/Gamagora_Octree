@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include "Octree.h"
 
 /* au cas ou M_PI ne soit defini */
@@ -32,45 +32,6 @@ float zLitePos = -100;
 float tx = 0.0;
 float ty = 0.0;
 float tz = 0.0;
-
-static const GLfloat g_vertex_buffer_data[] = {
-- 1.0f,-1.0f,-1.0f, // triangle 1 : begin
-- 1.0f,-1.0f, 1.0f,
-- 1.0f, 1.0f, 1.0f, // triangle 1 : end
-  1.0f, 1.0f,-1.0f, // triangle 2 : begin
-- 1.0f,-1.0f,-1.0f,
-- 1.0f, 1.0f,-1.0f, // triangle 2 : end
-  1.0f,-1.0f, 1.0f,
-- 1.0f,-1.0f,-1.0f,
-  1.0f,-1.0f,-1.0f,
-  1.0f, 1.0f,-1.0f,
-  1.0f,-1.0f,-1.0f,
-- 1.0f,-1.0f,-1.0f,
-- 1.0f,-1.0f,-1.0f,
-- 1.0f, 1.0f, 1.0f,
-- 1.0f, 1.0f,-1.0f,
-  1.0f,-1.0f, 1.0f,
-- 1.0f,-1.0f, 1.0f,
-- 1.0f,-1.0f,-1.0f,
-- 1.0f, 1.0f, 1.0f,
-- 1.0f,-1.0f, 1.0f,
-  1.0f,-1.0f, 1.0f,
-  1.0f, 1.0f, 1.0f,
-  1.0f,-1.0f,-1.0f,
-  1.0f, 1.0f,-1.0f,
-  1.0f,-1.0f,-1.0f,
-  1.0f, 1.0f, 1.0f,
-  1.0f,-1.0f, 1.0f,
-  1.0f, 1.0f, 1.0f,
-  1.0f, 1.0f,-1.0f,
-- 1.0f, 1.0f,-1.0f,
-  1.0f, 1.0f, 1.0f,
-- 1.0f, 1.0f,-1.0f,
-- 1.0f, 1.0f, 1.0f,
-  1.0f, 1.0f, 1.0f,
-- 1.0f, 1.0f, 1.0f,
-  1.0f,-1.0f, 1.0f
-};
 
 GLfloat VOXEL_SIZE = 5.0f;
 
@@ -127,8 +88,8 @@ Voxel* getBoxData(point3 box[2], uint32_t* size) {
 				{ 
 					point3(x, y, z), 
 					VOXEL_SIZE,
-					getVoxelData(point3(x, y, z)),
-					255
+					255,
+					getVoxelData(point3(x, y, z))
 				};
 				++idx;
 			}
@@ -156,6 +117,7 @@ Voxel* getSphereData(point3 box[2], Sphere s, uint32_t* size) {
 				{
 					point3(x, y, z),
 					VOXEL_SIZE,
+					0,
 					getVoxelData(point3(x, y, z))
 				};
 				
@@ -194,6 +156,7 @@ Voxel* getIntersectionSphereData(point3 box[2], Sphere s1, Sphere s2, uint32_t* 
 				{
 					point3(x, y, z),
 					VOXEL_SIZE,
+					0,
 					getVoxelData(point3(x, y, z))
 				};
 
@@ -232,6 +195,7 @@ Voxel* getUnionSphereData(point3 box[2], Sphere s1, Sphere s2, uint32_t* size) {
 				{
 					point3(x, y, z),
 					VOXEL_SIZE,
+					0,
 					getVoxelData(point3(x, y, z))
 				};
 
@@ -270,6 +234,7 @@ Voxel* getDiffSphereData(point3 box[2], Sphere s1, Sphere s2, uint32_t* size) {
 				{
 					point3(x, y, z),
 					VOXEL_SIZE,
+					0,
 					getVoxelData(point3(x, y, z))
 				};
 
@@ -342,6 +307,7 @@ void updateData() {
 	std::vector<Voxel> voxels = std::vector<Voxel>();
 	octree.createNodes(s1, voxels);
 	DATA = &voxels[0];
+	DATA_SIZE = voxels.size();
 }
 
 /* Dessin */

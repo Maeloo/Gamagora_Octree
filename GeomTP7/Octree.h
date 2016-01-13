@@ -22,5 +22,6 @@ public:
 	~Octree();
 	void createNodes(const Sphere& s, std::vector<Voxel> &data);
 	bool isIn(const Sphere& s, point3 point);
+	float* getVoxelData(point3 origin, const float size);
 };
 
