@@ -1,5 +1,7 @@
 #pragma once
+
 #include "Global.h"
+#include <vector>
 
 using namespace std;
 
@@ -18,7 +20,7 @@ public:
 	Octree();
 	Octree(const point3& origin, const int size);
 	~Octree();
-	void createNodes(const Sphere& s, Voxel* data);
-	bool isIn(const Sphere& s);
+	void createNodes(const Sphere& s, std::vector<Voxel> &data);
+	bool isIn(const Sphere& s, point3 point);
 };
 

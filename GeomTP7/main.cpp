@@ -339,7 +339,9 @@ void updateData() {
 	//DATA = getUnionSphereData(BOX, s1, s2, &DATA_SIZE);
 
 	Octree octree = Octree(point3(.0f, .0f, .0f), 50.0f);
-	octree.createNodes(s1, DATA);
+	std::vector<Voxel> voxels = std::vector<Voxel>();
+	octree.createNodes(s1, voxels);
+	DATA = &voxels[0];
 }
 
 /* Dessin */

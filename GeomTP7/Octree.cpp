@@ -17,9 +17,19 @@ Octree::~Octree()
 
 }
 
-void Octree::createNodes(const Sphere& s, Voxel* data)
+void Octree::createNodes(const Sphere& s, std::vector<Voxel> &data)
 {
-	if (isIn(s) && voxel.edge_size >= 1 ) {
+	point3* vertex = GetBounds(voxel);
+
+	int res = 0;
+	for (int i = 0; i < 8; ++i) {
+		if (isIn(s, vertex[i]))
+			res++;
+	}
+
+	if (res == 8)
+		data.push_back(voxel);
+	else if (res > 0) {
 		Voxel* fils = Subdivise(voxel);
 
 		for (int i = 0; i < 8; ++i) {
@@ -29,8 +39,8 @@ void Octree::createNodes(const Sphere& s, Voxel* data)
 	}
 }
 
-bool Octree::isIn(const Sphere& s) {
-	float dist = sqrtf((s.origin.x - voxel.origin.x)*(s.origin.x - voxel.origin.x) + (s.origin.y - voxel.origin.y)*(s.origin.y - voxel.origin.y) + (s.origin.z - voxel.origin.z)*(s.origin.z - voxel.origin.z));
+bool Octree::isIn(const Sphere& s, point3 point) {
+	float dist = sqrtf((s.origin.x - point.x)*(s.origin.x - point.x) + (s.origin.y - point.y)*(s.origin.y - point.y) + (s.origin.z - point.z)*(s.origin.z - point.z));
 	return dist <= s.radius;
 }
 
