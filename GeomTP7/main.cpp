@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include "struct.h"
 
 /* au cas ou M_PI ne soit defini */
@@ -28,6 +28,8 @@ struct Voxel {
 	GLfloat* vertices;
 	int potentiel;
 };
+
+GLfloat qaWhite[] = { 1.0, 1.0, 1.0, 1.0 }; // White Color
 
 float angleX = 0.0f; //angle de rotation en Y de la scene
 float angleY = 0.0f; //angle de rotation en X de la scene
@@ -312,7 +314,13 @@ static void init ( ) {
 
 	GLfloat ambient[] = { 0.2, 0.2, 0.2, 1.0 };
 	GLfloat diffuse[] = { 0.8, 0.8, 0.8, 1.0 };
-	GLfloat position[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat position[] = { 100, 100, 0, 1.0 };
+	GLfloat position2[] = { -100, 100, 0, 1.0 };
+
+	glEnable(GL_LIGHTING);
+
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
@@ -320,24 +328,14 @@ static void init ( ) {
 	glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
 
-	glPushMatrix();
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
-	glPopMatrix();
+	glLightfv(GL_LIGHT1, GL_POSITION, position2);
 
-	glPushMatrix();
-	glRotatef(90.0f, .0f, 0.f, 1.f);
-	glLightfv(GL_LIGHT1, GL_POSITION, position);
-	glPopMatrix();
-
-	//glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0);
-	//glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.1);
-	glEnable(GL_LIGHTING);
-	
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT1);
-
+	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.5);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0);
+	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.5);
+	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0);
 }
-
 
 void updateData() {
 	point3 origin1 = point3(-5.f, 0.f, 0.f);
@@ -359,13 +357,6 @@ void display ( void ) {
 
 	//Description de la scene
 	glLoadIdentity ( );
-	//rotation de la scene suivant les mouvements de la souris
-	/*glRotatef ( -angleY, 0.0f, 0.0f, 1.0f );
-	glRotatef ( angleX, 0.0f, 1.0f, 0.0f );
-	glTranslatef ( tx, ty, tz );
-
-	glRotatef ( -angleY, 0.0f, 0.0f, 1.0f );
-	glRotatef ( angleX, 0.0f, 1.0f, 0.0f );*/
 
 	glEnable ( GL_DEPTH_TEST );
 
@@ -399,11 +390,6 @@ void display ( void ) {
 	glEnd ( );
 
 	glutSwapBuffers ( );// echange des buffers
-
-	glPushMatrix();
-	glRotatef(90.0f, .0f, 0.f, 1.f);
-	//glLightfv(GL_LIGHT1, GL_POSITION, position);
-	glPopMatrix();
 
 	glutPostRedisplay();
 }

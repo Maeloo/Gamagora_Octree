@@ -21,10 +21,16 @@
     <ClCompile Include="struct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ModelisationGeometrique_TP8_ModelesVol\ModelisationGeometrique_TP8_ModelesVol\Octree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="struct.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ModelisationGeometrique_TP8_ModelesVol\ModelisationGeometrique_TP8_ModelesVol\Octree.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
