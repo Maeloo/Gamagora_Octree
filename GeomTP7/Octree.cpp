@@ -21,10 +21,10 @@ void Octree::createNodes(const Sphere& s, std::vector<Voxel> &data)
 {
 	if (voxel.edge_size >= 2.f)
 	{
-		Voxel* childrens = Subdivise(voxel);
+		Voxel* children = Subdivise(voxel);
 
 		for (int i = 0; i < 8; ++i) {
-			point3* vertex = GetBounds(childrens[i]);
+			point3* vertex = GetBounds(children[i]);
 
 			int res = 0;
 			for (int j = 0; j < 8; ++j) {
@@ -32,15 +32,19 @@ void Octree::createNodes(const Sphere& s, std::vector<Voxel> &data)
 					res++;
 			}
 
-			if (res == 8)
-				data.push_back(voxel);
+			if (res == 8) {
+				data.push_back(children[i]);
+			}
 			else if (res > 0) {
-				Voxel* fils = Subdivise(voxel);
+				Octree o = Octree(children[i].origin, children[i].edge_size);
+				o.createNodes(s, data);
+
+				/*Voxel* grand_children = Subdivise(children[i]);
 
 				for (int k = 0; k < 8; ++k) {
-					Octree o = Octree(fils[k].origin, voxel.edge_size / 2);
+					Octree o = Octree(grand_children[k].origin, grand_children[k].edge_size);
 					o.createNodes(s, data);
-				}
+				}*/
 			}
 		}
 	}
@@ -95,7 +99,7 @@ Voxel* Octree::Subdivise(const Voxel &v)
 float* Octree::getVoxelData(point3 origin, const float size) {
 	float *data = new float[108];
 	for (int i = 0; i < 107; i += 3) {
-		data[i] = (origin.x + g_vertex_buffer_data[i] * size);
+		data[i]		= (origin.x + g_vertex_buffer_data[i] * size);
 		data[i + 1] = (origin.y + g_vertex_buffer_data[i + 1] * size);
 		data[i + 2] = (origin.z + g_vertex_buffer_data[i + 2] * size);
 	}
