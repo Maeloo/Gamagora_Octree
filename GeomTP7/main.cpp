@@ -300,12 +300,59 @@ static void init ( ) {
 	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0);*/
 }
 
+
+std::vector<Voxel> octreeIntersection(const std::vector<Voxel> &v1, const std::vector<Voxel> &v2)
+{
+	std::vector<Voxel> voxels = std::vector<Voxel>();
+	for (int i = 0; i < v1.size(); i++)
+	{
+		for (int j = 0; j < v2.size(); j++)
+		{
+			if (v1[i].IsIn(v2[j].origin))
+			{
+				voxels.push_back(v1[i]);
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < v2.size(); i++)
+	{
+		for (int j = 0; j < v1.size(); j++)
+		{
+			if (v2[i].IsIn(v1[j].origin))
+			{
+				voxels.push_back(v2[i]);
+				break;
+			}
+		}
+	}
+
+	return voxels;
+}
+
+std::vector<Voxel> octreeUnion(const std::vector<Voxel> &v1, const std::vector<Voxel> &v2)
+{
+	std::vector<Voxel> voxels = std::vector<Voxel>();
+	for (int i = 0; i < v1.size(); i++)
+	{
+		voxels.push_back(v1[i]);
+	}
+	for (int i = 0; i < v2.size(); i++)
+	{
+		voxels.push_back(v2[i]);
+	}
+
+	return voxels;
+}
+
 void updateData() {
 	point3 origin1 = point3(-5.f, 0.f, 0.f);
-	point3 origin2 = point3(5.f, 0.f, 0.f);
+	point3 origin2 = point3(20.f, 0.f, 0.f);
 
 	Sphere s1 = { origin1, 35.f };
 	Sphere s2 = { origin2, 15.f };
+	Voxel cube = { origin2, 60.f, 255 };
 
 	//DATA = getBoxData(BOX, &DATA_SIZE);
 	//DATA = getSphereData(BOX, s1, &DATA_SIZE);
@@ -313,16 +360,25 @@ void updateData() {
 	//DATA = getIntersectionSphereData(BOX, s1, s2, &DATA_SIZE);
 	//DATA = getUnionSphereData(BOX, s1, s2, &DATA_SIZE);
 
-	Octree octree = Octree(point3(.0f, .0f, .0f), 200.0f);
+	//Octree octree = Octree(point3(.0f, .0f, .0f), 200.0f);
+	Octree octree = Octree(point3(-3.0f, .0f, .0f), 50.0f);
 	std::vector<Voxel> voxels = std::vector<Voxel>();
-	octree.createNodes(gs.sphere, voxels);
+	octree.createNodes(gs.sphere, gs.voxel_size, voxels);
 
-	DATA_SIZE = voxels.size();
+	Octree octree2 = Octree(point3(3.0f, .0f, .0f), 50.0f);
+	std::vector<Voxel> voxels2 = std::vector<Voxel>();
+	octree2.createNodes(cube, gs.voxel_size, voxels2);
+
+	std::vector<Voxel> union_voxels = octreeUnion(voxels, voxels2);
+	std::vector<Voxel> union_intersection = octreeIntersection(voxels, voxels2);
+
+	DATA_SIZE = union_intersection.size();
 	DATA = new Voxel[DATA_SIZE];
 	for (int i = 0; i < DATA_SIZE; ++i) {
-		DATA[i] = voxels[i];
+		DATA[i] = union_intersection[i];
 	}
 }
+
 
 /* Dessin */
 void display ( void ) {
@@ -452,6 +508,18 @@ GLvoid window_key_down ( unsigned char key, int x, int y )  //appuie des touches
 
 		case 'n':
 			CURRENT_VOXEL = CURRENT_VOXEL + 1 < DATA_SIZE ? CURRENT_VOXEL + 1 : 0;
+
+		case '+':
+			gs.voxel_size += 1.f;
+			updateData();
+			break;
+
+		case '-':
+			if (gs.voxel_size > 1)
+			{
+				gs.voxel_size -= 1.f;
+				updateData();
+			}
 			break;
 
 		//sortie

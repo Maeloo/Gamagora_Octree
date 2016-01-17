@@ -20,6 +20,6 @@ public:
 	Octree();
 	Octree(const point3& origin, const int size);
 	~Octree();
-	void createNodes(Shape& s, std::vector<Voxel> &data);
+	void createNodes(Shape& s, const float size_min, std::vector<Voxel> &data);
 };
 

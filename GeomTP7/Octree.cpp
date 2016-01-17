@@ -17,9 +17,9 @@ Octree::~Octree()
 
 }
 
-void Octree::createNodes(Shape& s, std::vector<Voxel> &data)
+void Octree::createNodes(Shape& s, const float size_min, std::vector<Voxel> &data)
 {
-	if (voxel.edge_size >= 5.f)
+	if (voxel.edge_size >= size_min)
 	{
 		Voxel* children = Subdivise(voxel);
 
@@ -39,7 +39,7 @@ void Octree::createNodes(Shape& s, std::vector<Voxel> &data)
 			}
 			else if (res > 0) {
 				Octree o = Octree(children[i].origin, children[i].edge_size);
-				o.createNodes(s, data);
+				o.createNodes(s, size_min, data);
 			}
 		}
 	}
