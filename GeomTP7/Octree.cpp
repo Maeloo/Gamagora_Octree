@@ -17,9 +17,9 @@ Octree::~Octree()
 
 }
 
-void Octree::createNodes(const Sphere& s, std::vector<Voxel> &data)
+void Octree::createNodes(Shape& s, std::vector<Voxel> &data)
 {
-	if (voxel.edge_size >= 2.f)
+	if (voxel.edge_size >= 5.f)
 	{
 		Voxel* children = Subdivise(voxel);
 
@@ -27,8 +27,10 @@ void Octree::createNodes(const Sphere& s, std::vector<Voxel> &data)
 			point3* vertex = GetBounds(children[i]);
 
 			int res = 0;
-			for (int j = 0; j < 8; ++j) {
-				if (isIn(s, vertex[j]))
+			for (int j = 0; j < 8; ++j) 
+			{
+				point3 p = vertex[j];
+				if (s.IsIn(p))
 					res++;
 			}
 
@@ -38,21 +40,9 @@ void Octree::createNodes(const Sphere& s, std::vector<Voxel> &data)
 			else if (res > 0) {
 				Octree o = Octree(children[i].origin, children[i].edge_size);
 				o.createNodes(s, data);
-
-				/*Voxel* grand_children = Subdivise(children[i]);
-
-				for (int k = 0; k < 8; ++k) {
-					Octree o = Octree(grand_children[k].origin, grand_children[k].edge_size);
-					o.createNodes(s, data);
-				}*/
 			}
 		}
 	}
-}
-
-bool Octree::isIn(const Sphere& s, point3 point) {
-	float dist = sqrtf((s.origin.x - point.x)*(s.origin.x - point.x) + (s.origin.y - point.y)*(s.origin.y - point.y) + (s.origin.z - point.z)*(s.origin.z - point.z));
-	return dist <= s.radius;
 }
 
 point3* Octree::GetBounds(const Voxel &v)
@@ -89,19 +79,5 @@ Voxel* Octree::Subdivise(const Voxel &v)
 		Voxel { point3(v.origin.x - delta, v.origin.y - delta, v.origin.z - delta), size, 255 }
 	};
 
-	for (int i = 0; i < 8; ++i) {
-		ret[i].vertices = getVoxelData(ret[i].origin, ret[i].edge_size);
-	}
-
 	return ret;
-}
-
-float* Octree::getVoxelData(point3 origin, const float size) {
-	float *data = new float[108];
-	for (int i = 0; i < 107; i += 3) {
-		data[i]		= (origin.x + g_vertex_buffer_data[i] * size);
-		data[i + 1] = (origin.y + g_vertex_buffer_data[i + 1] * size);
-		data[i + 2] = (origin.z + g_vertex_buffer_data[i + 2] * size);
-	}
-	return data;
 }

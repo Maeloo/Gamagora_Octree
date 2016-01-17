@@ -20,8 +20,6 @@ public:
 	Octree();
 	Octree(const point3& origin, const int size);
 	~Octree();
-	void createNodes(const Sphere& s, std::vector<Voxel> &data);
-	bool isIn(const Sphere& s, point3 point);
-	float* getVoxelData(point3 origin, const float size);
+	void createNodes(Shape& s, std::vector<Voxel> &data);
 };
 

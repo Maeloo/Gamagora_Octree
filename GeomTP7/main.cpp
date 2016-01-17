@@ -22,7 +22,7 @@ GLfloat qaWhite[] = { 1.0, 1.0, 1.0, 1.0 }; // White Color
 float angleX = 0.0f; //angle de rotation en Y de la scene
 float angleY = 0.0f; //angle de rotation en X de la scene
 
-float pasDeplacement = 1.25;
+float pasDeplacement = 0.5f;
 
 //position lumiere
 float xLitePos = 0;
@@ -37,6 +37,12 @@ GLfloat VOXEL_SIZE = 5.0f;
 
 Voxel*		DATA;
 uint32_t	DATA_SIZE;
+
+struct
+{
+	Sphere sphere;
+	float voxel_size;
+} gs;
 
 point3* BOX = new point3[2]
 { 
@@ -88,8 +94,7 @@ Voxel* getBoxData(point3 box[2], uint32_t* size) {
 				{ 
 					point3(x, y, z), 
 					VOXEL_SIZE,
-					255,
-					getVoxelData(point3(x, y, z))
+					255
 				};
 				++idx;
 			}
@@ -117,8 +122,7 @@ Voxel* getSphereData(point3 box[2], Sphere s, uint32_t* size) {
 				{
 					point3(x, y, z),
 					VOXEL_SIZE,
-					0,
-					getVoxelData(point3(x, y, z))
+					0
 				};
 				
 				if (dist <= s.radius) {
@@ -156,8 +160,7 @@ Voxel* getIntersectionSphereData(point3 box[2], Sphere s1, Sphere s2, uint32_t* 
 				{
 					point3(x, y, z),
 					VOXEL_SIZE,
-					0,
-					getVoxelData(point3(x, y, z))
+					0
 				};
 
 				if (dist2 <= s2.radius && dist1 <= s1.radius) {
@@ -195,8 +198,7 @@ Voxel* getUnionSphereData(point3 box[2], Sphere s1, Sphere s2, uint32_t* size) {
 				{
 					point3(x, y, z),
 					VOXEL_SIZE,
-					0,
-					getVoxelData(point3(x, y, z))
+					0
 				};
 
 				if (dist2 <= s2.radius || dist1 <= s1.radius) {
@@ -234,8 +236,7 @@ Voxel* getDiffSphereData(point3 box[2], Sphere s1, Sphere s2, uint32_t* size) {
 				{
 					point3(x, y, z),
 					VOXEL_SIZE,
-					0,
-					getVoxelData(point3(x, y, z))
+					0
 				};
 
 				if ((dist2 <= s2.radius && dist1 > s1.radius) || (dist2 > s2.radius && dist1 <= s1.radius)) {
@@ -305,7 +306,10 @@ void updateData() {
 
 	Octree octree = Octree(point3(.0f, .0f, .0f), 50.0f);
 	std::vector<Voxel> voxels = std::vector<Voxel>();
-	octree.createNodes(s1, voxels);
+	octree.createNodes(gs.sphere, voxels);
+
+
+
 	DATA_SIZE = voxels.size();
 	DATA = new Voxel[DATA_SIZE];
 	for (int i = 0; i < DATA_SIZE; ++i) {
@@ -326,7 +330,7 @@ void display ( void ) {
 
 	glPushMatrix();
 	
-	glRotatef(rotate, 0, rotate, 1.f);
+	//glRotatef(rotate, 0, rotate, 1.f);
 	
 	drawDATA(DATA_SIZE);
 
@@ -393,19 +397,23 @@ GLvoid window_key_down ( unsigned char key, int x, int y )  //appuie des touches
 
 		//deplacement de la camera
 		case 'z':
-			ty += int ( pasDeplacement ); glutPostRedisplay ( );
+			gs.sphere.origin.y += pasDeplacement;
+			updateData();
 			break;
 
 		case 's':
-			ty -= int ( pasDeplacement ); glutPostRedisplay ( );
+			gs.sphere.origin.y -= pasDeplacement;
+			updateData();
 			break;
 
 		case 'q':
-			tx -= int ( pasDeplacement ); glutPostRedisplay ( );
+			gs.sphere.origin.x -= pasDeplacement;
+			updateData();
 			break;
 
 		case 'd':
-			tx += int ( pasDeplacement ); glutPostRedisplay ( );
+			gs.sphere.origin.x += pasDeplacement;
+			updateData();
 			break;
 
 		case 'p':
@@ -440,6 +448,8 @@ GLvoid window_key_down ( unsigned char key, int x, int y )  //appuie des touches
 }
 
 int main ( int argc, char **argv ) {
+	gs.sphere = { point3(-5.f, 0.f, 0.f), 35.f };
+	gs.voxel_size = VOXEL_SIZE;
 	updateData();
 
 	glutInitWindowSize ( 400, 400 );
