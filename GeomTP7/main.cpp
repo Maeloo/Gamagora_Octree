@@ -306,9 +306,9 @@ void updateData() {
 	Octree octree = Octree(point3(.0f, .0f, .0f), 50.0f);
 	std::vector<Voxel> voxels = std::vector<Voxel>();
 	octree.createNodes(s1, voxels);
-
-	DATA = new Voxel[voxels.size()];
-	for (int i = 0; i < voxels.size(); ++i) {
+	DATA_SIZE = voxels.size();
+	DATA = new Voxel[DATA_SIZE];
+	for (int i = 0; i < DATA_SIZE; ++i) {
 		DATA[i] = voxels[i];
 	}
 }

@@ -74,19 +74,19 @@ point3* Octree::GetBounds(const Voxel &v)
 
 Voxel* Octree::Subdivise(const Voxel &v)
 {
-	float size = v.edge_size * 0.5f;
-	//float size = 2.f * delta;
+	float delta = v.edge_size * 0.25f;
+	float size = 2.f * delta;
 
 	Voxel* ret = new Voxel[8]
 	{ 
-		Voxel { point3(v.origin.x + size, v.origin.y + size, v.origin.z + size), size, 255 },
-		Voxel { point3(v.origin.x - size, v.origin.y + size, v.origin.z + size), size, 255 },
-		Voxel { point3(v.origin.x + size, v.origin.y - size, v.origin.z + size), size, 255 },
-		Voxel { point3(v.origin.x - size, v.origin.y - size, v.origin.z + size), size, 255 },
-		Voxel { point3(v.origin.x + size, v.origin.y + size, v.origin.z - size), size, 255 },
-		Voxel { point3(v.origin.x - size, v.origin.y + size, v.origin.z - size), size, 255 },
-		Voxel { point3(v.origin.x + size, v.origin.y - size, v.origin.z - size), size, 255 },
-		Voxel { point3(v.origin.x - size, v.origin.y - size, v.origin.z - size), size, 255 }
+		Voxel { point3(v.origin.x + delta, v.origin.y + delta, v.origin.z + delta), size, 255 },
+		Voxel { point3(v.origin.x - delta, v.origin.y + delta, v.origin.z + delta), size, 255 },
+		Voxel { point3(v.origin.x + delta, v.origin.y - delta, v.origin.z + delta), size, 255 },
+		Voxel { point3(v.origin.x - delta, v.origin.y - delta, v.origin.z + delta), size, 255 },
+		Voxel { point3(v.origin.x + delta, v.origin.y + delta, v.origin.z - delta), size, 255 },
+		Voxel { point3(v.origin.x - delta, v.origin.y + delta, v.origin.z - delta), size, 255 },
+		Voxel { point3(v.origin.x + delta, v.origin.y - delta, v.origin.z - delta), size, 255 },
+		Voxel { point3(v.origin.x - delta, v.origin.y - delta, v.origin.z - delta), size, 255 }
 	};
 
 	for (int i = 0; i < 8; ++i) {
