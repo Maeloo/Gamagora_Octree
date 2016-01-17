@@ -96,6 +96,10 @@ struct Voxel : Shape
 			p.z < origin.z + size && p.z > origin.z - size);
 	}
 
+	bool operator==(Voxel &v) {
+		return origin == v.origin;
+	}
+
 	float* getVoxelData(const point3 &origin, const float size) {
 		float *data = new float[108];
 		for (int i = 0; i < 107; i += 3) {
